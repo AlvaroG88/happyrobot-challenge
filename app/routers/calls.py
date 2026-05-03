@@ -1,18 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
 from app.models import Call
-from app.schemas import CallCreate, CallResponse
+from app.schemas import CallResponse
 
 router = APIRouter()
 
 
 @router.post("/", response_model=CallResponse, status_code=201)
-def create_call(call: CallCreate, db: Session = Depends(get_db)):
-    data = call.model_dump()
+async def create_call(request: Request, db: Session = Depends(get_db)):
+    data = await request.json()
 
-    # Convert numeric fields
+    # Clean numeric fields
     for field in ["initial_rate", "final_rate"]:
         val = data.get(field)
         if val is None or val == "" or val == "null":
@@ -53,13 +53,13 @@ def get_call(call_id: int, db: Session = Depends(get_db)):
 
 
 @router.patch("/{call_id}", response_model=CallResponse)
-def update_call(call_id: int, call_update: CallCreate, db: Session = Depends(get_db)):
+async def update_call(call_id: int, request: Request, db: Session = Depends(get_db)):
     call = db.query(Call).filter(Call.id == call_id).first()
     if not call:
         raise HTTPException(status_code=404, detail="Call not found")
 
-    update_data = call_update.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
+    data = await request.json()
+    for field, value in data.items():
         setattr(call, field, value)
 
     db.commit()

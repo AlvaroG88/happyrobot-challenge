@@ -69,8 +69,20 @@ class CallCreate(BaseModel):
     notes: Optional[str] = ""
 
 
-class CallResponse(CallCreate):
+class CallResponse(BaseModel):
     id: int
+    carrier_name: Optional[str] = None
+    mc_number: Optional[str] = "unknown"
+    carrier_eligible: Optional[str] = "pending"
+    load_id: Optional[str] = None
+    origin: Optional[str] = None
+    destination: Optional[str] = None
+    initial_rate: Optional[float] = None
+    final_rate: Optional[float] = None
+    negotiation_rounds: Optional[int] = 0
+    outcome: Optional[str] = None
+    sentiment: Optional[str] = None
+    notes: Optional[str] = ""
     created_at: datetime
 
     class Config:
