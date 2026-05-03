@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import Optional
 from datetime import datetime
 
@@ -103,3 +103,33 @@ class MetricsResponse(BaseModel):
     sentiment_breakdown: dict
     outcome_breakdown: dict
     calls_over_time: list
+
+class CallCreate(BaseModel):
+    carrier_name: Optional[str] = None
+    mc_number: Optional[str] = "unknown"
+    carrier_eligible: Optional[str] = "pending"
+    load_id: Optional[str] = None
+    initial_rate: Optional[float] = None
+    final_rate: Optional[float] = None
+    negotiation_rounds: Optional[int] = 0
+    outcome: Optional[str] = None
+    sentiment: Optional[str] = None
+    notes: Optional[str] = ""
+
+    @validator("final_rate", "initial_rate", pre=True)
+    def parse_float_or_none(cls, v):
+        if v is None or v == "" or v == "null":
+            return None
+        try:
+            return float(v)
+        except (ValueError, TypeError):
+            return None
+
+    @validator("negotiation_rounds", pre=True)
+    def parse_int_or_zero(cls, v):
+        if v is None or v == "" or v == "null":
+            return 0
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            return 0
