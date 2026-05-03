@@ -139,20 +139,4 @@ class CallCreate(BaseModel):
     sentiment: Optional[str] = None
     notes: Optional[str] = ""
 
-    @validator("final_rate", "initial_rate", pre=True)
-    def parse_float_or_none(cls, v):
-        if v is None or v == "" or v == "null":
-            return None
-        try:
-            return float(v)
-        except (ValueError, TypeError):
-            return None
-
-    @validator("negotiation_rounds", pre=True)
-    def parse_int_or_zero(cls, v):
-        if v is None or v == "" or v == "null":
-            return 0
-        try:
-            return int(v)
-        except (ValueError, TypeError):
-            return 0
+  
