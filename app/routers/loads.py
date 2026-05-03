@@ -4,6 +4,8 @@ from typing import List
 from app.database import get_db
 from app.models import Load
 from app.schemas import LoadCreate, LoadResponse, LoadSearchRequest
+from app.services.states import expand_search_terms
+from sqlalchemy import or_ as db_or
 
 router = APIRouter()
 
@@ -13,9 +15,15 @@ def search_loads(filters: LoadSearchRequest, db: Session = Depends(get_db)):
     query = db.query(Load)
 
     if filters.origin:
-        query = query.filter(Load.origin.ilike(f"%{filters.origin}%"))
+        terms = expand_search_terms(filters.origin)
+        origin_filters = [Load.origin.ilike(f"%{t}%") for t in terms]
+        query = query.filter(db_or(*origin_filters))
+
     if filters.destination:
-        query = query.filter(Load.destination.ilike(f"%{filters.destination}%"))
+        terms = expand_search_terms(filters.destination)
+        dest_filters = [Load.destination.ilike(f"%{t}%") for t in terms]
+        query = query.filter(db_or(*dest_filters))
+
     if filters.equipment_type:
         query = query.filter(Load.equipment_type.ilike(f"%{filters.equipment_type}%"))
     if filters.min_rate:
