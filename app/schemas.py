@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -56,15 +56,38 @@ class CarrierVerifyResponse(BaseModel):
 
 class CallCreate(BaseModel):
     carrier_name: Optional[str] = None
-    mc_number: str
+    mc_number: Optional[str] = "unknown"
     carrier_eligible: Optional[str] = "pending"
     load_id: Optional[str] = None
+    origin: Optional[str] = None          # NUEVO
+    destination: Optional[str] = None      # NUEVO
     initial_rate: Optional[float] = None
     final_rate: Optional[float] = None
     negotiation_rounds: Optional[int] = 0
     outcome: Optional[str] = None
     sentiment: Optional[str] = None
     notes: Optional[str] = ""
+
+
+    @field_validator("final_rate", "initial_rate", mode="before")
+    @classmethod
+    def parse_float_or_none(cls, v):
+        if v is None or v == "" or v == "null":
+            return None
+        try:
+            return float(v)
+        except (ValueError, TypeError):
+            return None
+
+    @field_validator("negotiation_rounds", mode="before")
+    @classmethod
+    def parse_int_or_zero(cls, v):
+        if v is None or v == "" or v == "null":
+            return 0
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            return 0
 
 
 class CallResponse(CallCreate):

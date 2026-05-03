@@ -194,6 +194,8 @@
                     <th>Carrier</th>
                     <th>MC #</th>
                     <th>Load</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
                     <th>Initial rate</th>
                     <th>Final rate</th>
                     <th>Rounds</th>
@@ -340,6 +342,8 @@
                         <td>${c.carrier_name || '-'}</td>
                         <td>${c.mc_number}</td>
                         <td>${c.load_id || '-'}</td>
+                        <td>${c.origin || '-'}</td>
+                        <td>${c.destination || '-'}</td>
                         <td>${c.initial_rate ? '$' + c.initial_rate.toFixed(0) : '-'}</td>
                         <td>${c.final_rate ? '$' + c.final_rate.toFixed(0) : '-'}</td>
                         <td>${c.negotiation_rounds}</td>

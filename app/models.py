@@ -46,6 +46,8 @@ class Call(Base):
     mc_number = Column(String, nullable=False)
     carrier_eligible = Column(String, default="pending")
     load_id = Column(String, nullable=True)
+    origin = Column(String, nullable=True)          # NUEVO
+    destination = Column(String, nullable=True)      # NUEVO
     initial_rate = Column(Float, nullable=True)
     final_rate = Column(Float, nullable=True)
     negotiation_rounds = Column(Integer, default=0)
