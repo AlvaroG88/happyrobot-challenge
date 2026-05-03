@@ -10,7 +10,29 @@ router = APIRouter()
 
 @router.post("/", response_model=CallResponse, status_code=201)
 def create_call(call: CallCreate, db: Session = Depends(get_db)):
-    db_call = Call(**call.model_dump())
+    data = call.model_dump()
+
+    # Convert numeric fields
+    for field in ["initial_rate", "final_rate"]:
+        val = data.get(field)
+        if val is None or val == "" or val == "null":
+            data[field] = None
+        else:
+            try:
+                data[field] = float(val)
+            except (ValueError, TypeError):
+                data[field] = None
+
+    val = data.get("negotiation_rounds")
+    if val is None or val == "" or val == "null":
+        data["negotiation_rounds"] = 0
+    else:
+        try:
+            data["negotiation_rounds"] = int(val)
+        except (ValueError, TypeError):
+            data["negotiation_rounds"] = 0
+
+    db_call = Call(**data)
     db.add(db_call)
     db.commit()
     db.refresh(db_call)
