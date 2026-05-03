@@ -229,7 +229,157 @@ def seed_loads(db):
             "num_of_pieces": 28,
             "miles": 664,
             "dimensions": "48x40x48"
-        }
+        },
+        {
+            "load_id": "LD-1016",
+            "origin": "Los Angeles, CA",
+            "destination": "Seattle, WA",
+            "pickup_datetime": datetime.now() + timedelta(days=2),
+            "delivery_datetime": datetime.now() + timedelta(days=4),
+            "equipment_type": "Dry Van",
+            "loadboard_rate": 2400.00,
+            "notes": "No touch freight.",
+            "weight": 34000,
+            "commodity_type": "Apparel",
+            "num_of_pieces": 45,
+            "miles": 1135,
+            "dimensions": "48x40x48"
+        },
+        {
+            "load_id": "LD-1017",
+            "origin": "Denver, CO",
+            "destination": "Dallas, TX",
+            "pickup_datetime": datetime.now() + timedelta(days=1),
+            "delivery_datetime": datetime.now() + timedelta(days=3),
+            "equipment_type": "Dry Van",
+            "loadboard_rate": 1950.00,
+            "notes": "Driver assist required.",
+            "weight": 28000,
+            "commodity_type": "Home Goods",
+            "num_of_pieces": 20,
+            "miles": 781,
+            "dimensions": "48x40x60"
+        },
+        {
+            "load_id": "LD-1018",
+            "origin": "Atlanta, GA",
+            "destination": "Miami, FL",
+            "pickup_datetime": datetime.now() + timedelta(days=2),
+            "delivery_datetime": datetime.now() + timedelta(days=3),
+            "equipment_type": "Reefer",
+            "loadboard_rate": 1800.00,
+            "notes": "Temp 35F. Dairy products.",
+            "weight": 38000,
+            "commodity_type": "Dairy Products",
+            "num_of_pieces": 16,
+            "miles": 662,
+            "dimensions": "48x40x48"
+        },
+        {
+            "load_id": "LD-1019",
+            "origin": "Houston, TX",
+            "destination": "Atlanta, GA",
+            "pickup_datetime": datetime.now() + timedelta(days=1),
+            "delivery_datetime": datetime.now() + timedelta(days=3),
+            "equipment_type": "Flatbed",
+            "loadboard_rate": 2700.00,
+            "notes": "Oversized permit needed.",
+            "weight": 45000,
+            "commodity_type": "Industrial Equipment",
+            "num_of_pieces": 4,
+            "miles": 789,
+            "dimensions": "84x48x36"
+        },
+        {
+            "load_id": "LD-1020",
+            "origin": "New York, NY",
+            "destination": "Chicago, IL",
+            "pickup_datetime": datetime.now() + timedelta(days=2),
+            "delivery_datetime": datetime.now() + timedelta(days=4),
+            "equipment_type": "Dry Van",
+            "loadboard_rate": 2600.00,
+            "notes": "Appointment delivery. 2hr window.",
+            "weight": 40000,
+            "commodity_type": "Retail Goods",
+            "num_of_pieces": 32,
+            "miles": 790,
+            "dimensions": "48x40x48"
+        },
+        {
+            "load_id": "LD-1021",
+            "origin": "San Francisco, CA",
+            "destination": "Los Angeles, CA",
+            "pickup_datetime": datetime.now() + timedelta(days=1),
+            "delivery_datetime": datetime.now() + timedelta(days=2),
+            "equipment_type": "Reefer",
+            "loadboard_rate": 1200.00,
+            "notes": "Temp 32F. Fresh fish.",
+            "weight": 22000,
+            "commodity_type": "Seafood",
+            "num_of_pieces": 10,
+            "miles": 382,
+            "dimensions": "48x40x48"
+        },
+        {
+            "load_id": "LD-1022",
+            "origin": "Dallas, TX",
+            "destination": "Denver, CO",
+            "pickup_datetime": datetime.now() + timedelta(days=3),
+            "delivery_datetime": datetime.now() + timedelta(days=5),
+            "equipment_type": "Dry Van",
+            "loadboard_rate": 2100.00,
+            "notes": "Fragile goods. Handle with care.",
+            "weight": 26000,
+            "commodity_type": "Glassware",
+            "num_of_pieces": 14,
+            "miles": 781,
+            "dimensions": "48x40x36"
+        },
+        {
+            "load_id": "LD-1023",
+            "origin": "Chicago, IL",
+            "destination": "Nashville, TN",
+            "pickup_datetime": datetime.now() + timedelta(days=1),
+            "delivery_datetime": datetime.now() + timedelta(days=2),
+            "equipment_type": "Dry Van",
+            "loadboard_rate": 1500.00,
+            "notes": "FCFS. No appointment.",
+            "weight": 30000,
+            "commodity_type": "Office Supplies",
+            "num_of_pieces": 25,
+            "miles": 473,
+            "dimensions": "48x40x48"
+        },
+        {
+            "load_id": "LD-1024",
+            "origin": "Miami, FL",
+            "destination": "New York, NY",
+            "pickup_datetime": datetime.now() + timedelta(days=2),
+            "delivery_datetime": datetime.now() + timedelta(days=4),
+            "equipment_type": "Reefer",
+            "loadboard_rate": 3400.00,
+            "notes": "Temp 28F. Frozen meat.",
+            "weight": 42000,
+            "commodity_type": "Frozen Meat",
+            "num_of_pieces": 20,
+            "miles": 1280,
+            "dimensions": "48x40x60"
+        },
+        {
+            "load_id": "LD-1025",
+            "origin": "Seattle, WA",
+            "destination": "Denver, CO",
+            "pickup_datetime": datetime.now() + timedelta(days=3),
+            "delivery_datetime": datetime.now() + timedelta(days=5),
+            "equipment_type": "Flatbed",
+            "loadboard_rate": 2900.00,
+            "notes": "Tarps and chains required.",
+            "weight": 47000,
+            "commodity_type": "Lumber",
+            "num_of_pieces": 8,
+            "miles": 1321,
+            "dimensions": "96x48x12"
+        },
     ]
 
     for load_data in loads:
@@ -282,6 +432,11 @@ def seed_calls(db):
 
 
 def main():
+    # Drop and recreate all tables for fresh seed
+    from app.models import Base
+    from app.database import engine
+    Base.metadata.drop_all(bind=engine)
+    
     init_db()
     db = SessionLocal()
     try:

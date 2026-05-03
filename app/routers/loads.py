@@ -25,7 +25,9 @@ def search_loads(filters: LoadSearchRequest, db: Session = Depends(get_db)):
         query = query.filter(db_or(*dest_filters))
 
     if filters.equipment_type:
-        query = query.filter(Load.equipment_type.ilike(f"%{filters.equipment_type}%"))
+        types = resolve_equipment(filters.equipment_type)
+        equip_filters = [Load.equipment_type.ilike(f"%{t}%") for t in types]
+        query = query.filter(db_or(*equip_filters))
     if filters.min_rate:
         query = query.filter(Load.loadboard_rate >= filters.min_rate)
     if filters.max_rate:
@@ -76,3 +78,16 @@ def negotiate_load(request: NegotiationRequest, db: Session = Depends(get_db)):
         current_round=request.current_round
     )
     return result
+EQUIPMENT_MAP = {
+    "dry van": ["dry van", "standard", "normal", "van"],
+    "reefer": ["reefer", "refrigerated", "frigorifico", "frigorífico", "cold"],
+    "flatbed": ["flatbed", "flat bed", "platform", "plataforma"],
+}
+
+
+def resolve_equipment(raw: str) -> list:
+    lower = raw.lower().strip()
+    for canonical, aliases in EQUIPMENT_MAP.items():
+        if lower in aliases or lower == canonical:
+            return [canonical]
+    return [lower]
