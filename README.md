@@ -4,7 +4,6 @@ Automated inbound carrier call system for freight brokerage. Carriers call in to
 
 ## Live URLs
 
-- **API:** https://happyrobot-challenge-production-c876.up.railway.app
 - **Dashboard:** https://happyrobot-challenge-production-c876.up.railway.app/dashboard/dashboard.html
 - **Health Check:** https://happyrobot-challenge-production-c876.up.railway.app/health
 - **API Docs:** https://happyrobot-challenge-production-c876.up.railway.app/docs

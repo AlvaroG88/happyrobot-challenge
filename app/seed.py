@@ -431,11 +431,7 @@ def seed_calls(db):
     print(f"✓ {len(calls)} sample calls seeded")
 
 
-def main():
-    # Drop and recreate all tables for fresh seed
-    from app.models import Base
-    from app.database import engine
-    
+def main():   
     
     init_db()
     db = SessionLocal()
