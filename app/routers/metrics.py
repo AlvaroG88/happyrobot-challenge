@@ -89,3 +89,16 @@ def get_metrics(db: Session = Depends(get_db)):
         outcome_breakdown=outcome_breakdown,
         calls_over_time=calls_over_time
     )
+# En app/routers/metrics.py, añade:
+@router.get("/top-lanes")
+def get_top_lanes(db: Session = Depends(get_db)):
+    lanes = (
+        db.query(Call.origin, Call.destination, func.count(Call.id).label("count"))
+        .filter(Call.origin.isnot(None), Call.origin != "")
+        .filter(Call.destination.isnot(None), Call.destination != "")
+        .group_by(Call.origin, Call.destination)
+        .order_by(func.count(Call.id).desc())
+        .limit(10)
+        .all()
+    )
+    return [{"origin": o, "destination": d, "count": c} for o, d, c in lanes]

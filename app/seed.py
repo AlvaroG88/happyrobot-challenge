@@ -435,7 +435,7 @@ def main():
     # Drop and recreate all tables for fresh seed
     from app.models import Base
     from app.database import engine
-    Base.metadata.drop_all(bind=engine)
+    
     
     init_db()
     db = SessionLocal()
