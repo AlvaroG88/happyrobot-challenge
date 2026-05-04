@@ -14,17 +14,19 @@ router = APIRouter()
 def search_loads(filters: LoadSearchRequest, db: Session = Depends(get_db)):
     query = db.query(Load)
 
-    if filters.origin and filters.origin.strip():
+    IGNORE_VALUES = {"all", "any", "nationwide", "everywhere", "us", "usa", "united states"}
+
+    if filters.origin and filters.origin.strip() and filters.origin.strip().lower() not in IGNORE_VALUES:
        terms = expand_search_terms(filters.origin)
        origin_filters = [Load.origin.ilike(f"%{t}%") for t in terms]
        query = query.filter(db_or(*origin_filters))
 
-    if filters.destination and filters.destination.strip():
+    if filters.destination and filters.destination.strip() and filters.destination.strip().lower() not in IGNORE_VALUES:
        terms = expand_search_terms(filters.destination)
        dest_filters = [Load.destination.ilike(f"%{t}%") for t in terms]
        query = query.filter(db_or(*dest_filters))
 
-    if filters.equipment_type and filters.equipment_type.strip():
+    if filters.equipment_type and filters.equipment_type.strip() and filters.equipment_type.strip().lower() not in IGNORE_VALUES:
        types = resolve_equipment(filters.equipment_type)
        equip_filters = [Load.equipment_type.ilike(f"%{t}%") for t in types]
        query = query.filter(db_or(*equip_filters))
