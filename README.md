@@ -14,16 +14,18 @@ Automated inbound carrier call system for freight brokerage. Carriers call in to
 All endpoints require the header:
 X-API-Key: hr-dev-key-2024
 ## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/carrier/verify | Verify carrier MC number via FMCSA |
-| POST | /api/loads/search | Search loads by origin, destination, equipment |
-| GET | /api/loads/ | List all available loads |
-| POST | /api/loads/negotiate | Evaluate a carrier's counter offer |
-| POST | /api/calls/ | Log a call |
-| GET | /api/calls/ | List all calls |
-| GET | /api/metrics/ | Dashboard metrics |
+ 
+| Method | Endpoint               | Description                         |
+|--------|------------------------|-------------------------------------|
+| POST   | /api/carrier/verify    | Verify carrier MC number via FMCSA  |
+| POST   | /api/loads/search      | Search loads by filters             |
+| POST   | /api/loads/negotiate   | Evaluate carrier counter offer      |
+| POST   | /api/calls/            | Log a call                          |
+| GET    | /api/loads/            | List all loads                      |
+| GET    | /api/calls/            | List all calls                      |
+| GET    | /api/metrics/          | Dashboard metrics                   |
+| GET    | /api/metrics/top-lanes | Top lanes by volume                 |
+ 
 
 ## How to Reproduce
 
@@ -31,7 +33,17 @@ X-API-Key: hr-dev-key-2024
 - Python 3.11+
 - Docker (optional)
 
-### Local Setup
+## Quick Start
+ 
+### Docker (one command)
+```bash
+git clone https://github.com/AlvaroG88/happyrobot-challenge.git
+cd happyrobot-challenge
+# Create .env with: DATABASE_URL, API_KEY, FMCSA_API_KEY
+docker-compose up --build
+```
+ 
+### Local
 ```bash
 git clone https://github.com/AlvaroG88/happyrobot-challenge.git
 cd happyrobot-challenge
@@ -39,29 +51,25 @@ python -m venv venv
 source venv/bin/activate  # Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
-
-Create a `.env` file:
+ 
+Create `.env`:
+```
 DATABASE_URL=sqlite:///./happyrobot.db
 API_KEY=hr-dev-key-2024
 FMCSA_API_KEY=your_fmcsa_webkey
-Seed the database and run:
+```
+ 
 ```bash
 python -m app.seed
 uvicorn app.main:app --reload
 ```
-
-### Docker
-```bash
-docker-compose up --build
-```
-
+ 
 ### Deploy to Railway
-1. Fork or push this repo to GitHub
-2. Go to railway.app → New Project → Deploy from GitHub Repo
-3. Select the repository
-4. Add environment variables: `API_KEY`, `FMCSA_API_KEY`, `DATABASE_URL`
-5. Go to Settings → Networking → Generate Domain
-6. Railway auto-detects the Dockerfile and deploys with HTTPS
+1. Push repo to GitHub
+2. Railway → New Project → Deploy from GitHub Repo
+3. Add environment variables: `API_KEY`, `FMCSA_API_KEY`, `DATABASE_URL`
+4. Settings → Networking → Generate Domain
+5. HTTPS is automatic
 
 ## Tech Stack
 - **Backend:** Python, FastAPI, SQLAlchemy, SQLite
