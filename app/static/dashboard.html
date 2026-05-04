@@ -185,7 +185,23 @@
             </div>
         </div>
     </div>
-
+<div class="charts-grid">
+        <div class="chart-card">
+            <h3>Top lanes</h3>
+            <table id="lanes-table">
+                <thead>
+                    <tr>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Calls</th>
+                    </tr>
+                </thead>
+                <tbody id="lanes-body">
+                    <tr><td colspan="3" class="loading">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="calls-table">
         <h3>Recent calls</h3>
         <table>
@@ -352,6 +368,25 @@
                         <td>${new Date(c.created_at).toLocaleDateString()}</td>
                     </tr>
                 `).join('');
+
+                // Top lanes
+                try {
+                    const lanes = await fetchData('/api/metrics/top-lanes');
+                    const lanesBody = document.getElementById('lanes-body');
+                    if (lanes.length > 0) {
+                        lanesBody.innerHTML = lanes.map(l => `
+                            <tr>
+                                <td>${l.origin}</td>
+                                <td>${l.destination}</td>
+                                <td>${l.count}</td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        lanesBody.innerHTML = '<tr><td colspan="3">No lane data yet</td></tr>';
+                    }
+                } catch (e) {
+                    console.error('Lanes error:', e);
+                }
 
             } catch (err) {
                 console.error('Dashboard error:', err);
